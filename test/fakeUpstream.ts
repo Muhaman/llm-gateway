@@ -55,7 +55,7 @@ export function finishedStream(events: StreamEvent[]): UpstreamReply {
   return { stream: generate() };
 }
 
-export const STREAM_EVENTS: StreamEvent[] = [
+export const STREAM_EVENTS: Array<StreamEvent & Record<string, unknown>> = [
   { type: "message_start", message: { id: "msg_s", usage: { input_tokens: 12, output_tokens: 1 } } },
   { type: "content_block_start", index: 0, content_block: { type: "text", text: "" } },
   { type: "content_block_delta", index: 0, delta: { type: "text_delta", text: "hi" } },
