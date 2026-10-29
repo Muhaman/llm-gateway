@@ -1,0 +1,23 @@
+services:
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  gateway:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:?set ANTHROPIC_API_KEY}
+      REDIS_URL: redis://redis:6379
+      FALLBACK_MODELS: ${FALLBACK_MODELS:-claude-opus-5-5,claude-sonnet-5-5}
+      CACHE_TTL_S: ${CACHE_TTL_S:-3600}
+    depends_on:
+      redis:
+        condition: service_healthy
