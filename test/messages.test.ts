@@ -105,7 +105,16 @@ describe("POST /v1/messages", () => {
     expect(upstream.calls).toHaveLength(1);
   });
 
-  it("rejects an invalid body and a model outside the allowlist with 400", async () => {
+  it("rejects a model outside the allowlist with 400 and never calls upstream", async () => {
+    const key = await h.newKey();
+    upstream.calls.length = 0;
+    const res = await post(key, { ...REQUEST_BODY, model: "claude-haiku-5-5" });
+    expect(res.status).toBe(400);
+    expect(res.body.error.code).toBe("model_not_allowed");
+    expect(upstream.calls).toHaveLength(0);
+  });
+
+  it("rejects an invalid body and an unknown model with 400", async () => {
     const key = await h.newKey();
     expect((await post(key, { model: "claude-opus-5-5" })).status).toBe(400);
     const res = await post(key, { ...REQUEST_BODY, model: "claude-other" });

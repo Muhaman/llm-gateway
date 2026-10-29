@@ -48,9 +48,9 @@ export class UpstreamExhaustedError extends AppError {
 const isRetryable = (status: number | undefined): boolean =>
   status === undefined || status === 429 || status >= 500;
 
-/** Requested model first (when configured), then the remaining models in order. */
+/** Requested model first, then the remaining configured models in order. The caller guarantees `requested` is configured. */
 export function modelChain(requested: string, models: readonly string[]): string[] {
-  return models.includes(requested) ? [requested, ...models.filter((m) => m !== requested)] : [...models];
+  return [requested, ...models.filter((m) => m !== requested)];
 }
 
 /**

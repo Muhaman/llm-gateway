@@ -52,7 +52,7 @@ Add `"stream": true` to receive `event: <type>` / `data: <json>` SSE events. Gat
 | Env | Default | Notes |
 |---|---|---|
 | `ANTHROPIC_API_KEY`, `REDIS_URL` | required | startup fails naming the variable |
-| `FALLBACK_MODELS` | `claude-opus-5-5,claude-sonnet-5-5` | allowlist and fallback order |
+| `FALLBACK_MODELS` | `claude-opus-5-5,claude-sonnet-5-5` | the allowed models and the fallback order; a request for any other model gets 400 `model_not_allowed` |
 | `CACHE_TTL_S` | `3600` | |
 | `PORT` | `3000` | |
 
@@ -64,7 +64,7 @@ Metrics: `gateway_request_duration_seconds`, `gateway_tokens_total{direction,mod
 - **Keys are hashed**: Redis stores `sha256(key)` only; the raw key is shown once at creation.
 - **Cache is per key**, not global, so one tenant can never read another's completions. The cache key is the sha256 of canonical JSON (sorted keys) minus `stream` and `metadata`. Refusals are not cached.
 - **Fallback decisions live in the gateway**: SDK retries are disabled and the Anthropic client sits behind an `Upstream` interface, so tests drive 529s, 400s and streams with a fake.
-- **No server-side `fallbacks` injection**: the gateway never alters client bodies; its own chain covers overload. Models outside `FALLBACK_MODELS` get 400 `model_not_allowed`.
+- **No server-side `fallbacks` injection**: the gateway never alters client bodies; its own chain covers overload. `FALLBACK_MODELS` is both the allowlist and the fallback order: the requested model is tried first, then the rest of the list. Any model outside it gets 400 `model_not_allowed` rather than being silently swapped for another.
 - **Disconnects abort upstream**: closing the client socket aborts the upstream request through an `AbortSignal`.
 
 ## Testing
