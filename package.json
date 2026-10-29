@@ -1,0 +1,41 @@
+{
+  "name": "llm-gateway",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=24" },
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc -p tsconfig.build.json && cp src/ratelimit/tokenBucket.lua dist/ratelimit/tokenBucket.lua",
+    "start": "node dist/index.js",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "create-key": "tsx scripts/create-key.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.3.0",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.0",
+    "express": "^5.3.0",
+    "express-rate-limit": "^8.7.0",
+    "helmet": "^8.3.0",
+    "ioredis": "^6.0.0",
+    "pino": "^10.4.0",
+    "prom-client": "^15.1.0",
+    "zod": "^4.6.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.0",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.6.0",
+    "@types/supertest": "^7.2.0",
+    "eslint": "^10.13.0",
+    "supertest": "^7.3.0",
+    "tsx": "^4.23.0",
+    "typescript": "^6.0.0",
+    "typescript-eslint": "^8.72.0",
+    "vitest": "^5.0.0"
+  }
+}
