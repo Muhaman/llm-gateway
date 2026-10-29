@@ -32,6 +32,7 @@ flowchart LR
 ```bash
 cp .env.example .env              # set ANTHROPIC_API_KEY
 docker compose up --build         # gateway on :3000, redis:7 on :6379
+# Redis is bound to 127.0.0.1 on purpose so it is not exposed to the network.
 npm install && npm run create-key -- demo 60 1000000   # prints the gw_ key once
 ```
 
